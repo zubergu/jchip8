@@ -1,0 +1,25 @@
+package com.zubergu.model.instructions;
+
+public class SeVxVy implements Instruction {
+
+    private Registers registers;
+
+
+    public SeVxVy( Registers r ) {
+        this.registers = r;
+    }
+    
+    
+    /**
+    * 5xy0 - SE Vx, Vy
+    */
+    @Override
+    public void execute( int code ) {
+        int x = code >> 8 & 0x000F;
+        int kk = code & 0x00FF;
+        
+        if( registers.getV( x ) == kk ) {
+            registers.incrementTwicePC();
+        }
+    }
+}

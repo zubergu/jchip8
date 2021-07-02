@@ -1,0 +1,88 @@
+<project name ="jchip8" default="dist" basedir=".">
+  <description>
+      jchip8 - chip8 emulator/interpreter implementation
+  </description>
+    
+  
+  <!-- set global properties for this build -->
+  <property name="src.dir"   location="src/main/java"/>
+  <property name="test.dir"  location="src/test/java"/>
+  <property name="testreport.dir" location="testreport"/>
+  <property name="build.dir" location="build"/>
+  <property name="build-test.dir" location="build-test"/>
+  <property name="dist"  location="dist"/>
+  <property name="ext"   location="external"/>
+  <property name="testResources" location="src/test/resources"/>
+  <property name="testSuites.dir" location="src/test/testsuites"/>
+  
+  <path id="classpath">
+    <pathelement location="${build.dir}"/>
+    <fileset dir="${ext}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir = "${testResources}">
+      <include name="**/*.jar"/>
+    </fileset>
+        <pathelement location="${build-test.dir}"/>
+    <fileset dir="${ext}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir = "${testResources}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+  
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- create the builddirectory structure used by compile -->
+    <mkdir dir="${build.dir}"/>
+  </target>
+  
+  <target name="compile" depends="init" description="compile the source">
+    <!-- Compile the Java code from ${src.dir} into ${build} -->
+    <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath"/>
+  </target>
+    
+  <target name="compile-test" depends="compile" description="compile for unit tests">
+    <!-- Compile the Java code from ${src.dir} into ${build} -->
+    <mkdir dir="${build-test.dir}"/>
+    <javac srcdir="${test.dir}" destdir="${build-test.dir}" classpathref="classpath"/>
+  </target>
+  
+  <target name="dist" depends="compile" description="generate the distribution">
+    <!-- create the distribution directory -->
+    <mkdir dir="${dist}/lib"/>
+    
+    <!-- Put everything in ${build} into the jchip8-${DSTAMP}.jar file -->
+    <jar jarfile="${dist}/lib/jchip8-${DSTAMP}.jar" basedir="${build.dir}">
+        <manifest>
+            <attribute name="Main-Class" value="com.zubergu.jchip8.AppStart" />
+        </manifest>
+    </jar>
+  </target>
+  
+  <target name="clean" description="clean up">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build.dir}"/>
+    <delete dir="${build-test.dir}"/>
+    <delete dir="${dist}"/>
+    <delete dir="${testreport.dir}"/>
+  </target>
+  
+  <!-- Run TestNG -->
+  <taskdef name="testng" classname="org.testng.TestNGAntTask" classpathref="classpath" />
+  
+  <target name="testng" depends="compile-test">
+    <mkdir dir="${testreport.dir}"/>
+    <testng classpathref="classpath"
+            outputDir="${testreport.dir}"
+            haltOnFailure="false"
+            useDefaultListeners="true">
+      
+      <xmlfileset dir="${testSuites.dir}" includes="AllTestsSuite.xml"/>
+    </testng>
+    
+  </target>
+  
+</project>

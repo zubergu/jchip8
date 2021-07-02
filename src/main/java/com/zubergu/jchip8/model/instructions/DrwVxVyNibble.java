@@ -1,0 +1,65 @@
+package com.zubergu.jchip8.model.instructions;
+
+import com.zubergu.jchip8.model.Registers;
+import com.zubergu.jchip8.model.Display;
+import com.zubergu.jchip8.model.Memory;
+
+public class DrwVxVyNibble implements Instruction {
+
+    private Registers registers;
+    private Display display;
+    private Memory memory;
+
+
+    public DrwVxVyNibble( Display d, Registers r, Memory m) {
+        this.display = d;
+        this.registers = r;
+        this.memory = m;
+    }
+    
+    
+    /**
+    * Dxyn - DRW Vx, Vy, nibble
+    */
+    @Override
+    public void execute( int code ) {
+        int x = code >> 8 & 0x000F;
+        int y = code >> 4 & 0x000F;
+        int n = code & 0x000F;
+        
+        int[] sprite = new int[n];
+        
+        int vx = registers.getV( x ) % 64;
+        int vy = registers.getV( y ) % 32;
+        
+        System.out.printf( "%d %d %d\n", vx, vy, n );
+                
+        boolean collision = false;
+        
+        for( int i = 0; i < n; i++ ) {
+            sprite[i] = memory.read8Bit( registers.getI() + i );
+        }
+        
+        for( int i = 0; i < n; i++ ) {
+            if( vy + i >= Display.NUMBER_OF_ROWS ) { break; } // if row is out of display stop drawing
+            int bitMask = 0x80; // 1000 0000 
+            for( int j = 0; j < 8; j++ ) { // 8 bits per sprite row
+                if( vx + j >= Display.NUMBER_OF_COLUMNS ) { break; } // if column is out of screen stop
+                collision = collision | display.xorPixel( vx + j, vy + i, (sprite[i] & bitMask) == bitMask );
+                bitMask = bitMask >> 1;
+            }
+        }
+        
+        System.out.println( "Collision " + collision );
+        
+        if( collision ) {
+            registers.setV( 0xF, 1 );
+        } else {
+            registers.setV( 0xF, 0 );
+        }
+        
+        // refresh screen after sprite 
+        display.setNeedRefresh();
+
+    }
+}

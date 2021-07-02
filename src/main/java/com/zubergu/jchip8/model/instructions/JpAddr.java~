@@ -1,0 +1,16 @@
+package com.zubergu.model.instructions;
+
+public class JpAddr implements Instruction {
+
+    private Registers registers;
+
+    public JpAddr( Registers r ) {
+        this.registers = r;
+    }
+    
+    @Override
+    public void execute( int code ) {
+        int nnn = code & 0x0FFF;
+        setPC( nnn );
+    }
+}

@@ -1,0 +1,25 @@
+package com.zubergu.model.instructions;
+
+public class LdVxByte implements Instruction {
+
+    private Registers registers;
+
+
+    public LdVxByte( Registers r ) {
+        this.registers = r;
+    }
+    
+    
+    /**
+    * 5xy0 - SE Vx, Vy
+    */
+    @Override
+    public void execute( int code ) {
+        int x = code >> 8 & 0x000F;
+        int y = code >> 4 & 0x000F;
+        
+        if( registers.getV( x ) == registers.getV( y ) ) {
+            registers.incrementTwicePC();
+        }
+    }
+}

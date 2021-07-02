@@ -1,0 +1,23 @@
+package com.zubergu.model.instructions;
+
+public class Call implements Instruction {
+
+    private Registers registers;
+
+
+    public Call( Registers r ) {
+        this.registers = r;
+    }
+    
+    
+    /**
+    * 2nnn - CALL addr
+    */
+    @Override
+    public void execute( int code ) {
+        int nnn = code & 0x0FFF;
+        int currentPC = registers.getPC();
+        registers.pushStack( currentPC );
+        registers.setPC( nnn );
+    }
+}

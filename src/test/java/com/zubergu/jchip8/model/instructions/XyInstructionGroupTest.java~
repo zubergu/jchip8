@@ -1,0 +1,27 @@
+package com.zubergu.jchip8.model.instructions;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
+
+import org.testng.annotations.Test;
+
+import com.zubergu.jchip8.model.Registers;
+
+public class XyInstructionGroupTest {
+    
+    @Test
+    public void subnVxVyTest() {
+        Registers r = new Registers();
+        XyInstructionGroup instruction = new XyInstructionGroup( r );
+        
+        
+        r.setV( 0, 1 );
+        r.setV( 1, 2 );
+        r.setV( 0xF, 0 );
+        instruction.execute( 0x8017 );
+        
+        assertEquals( r.getV( 0 ), 0 );
+        assertEquals( r.getV( 0xF ), 1 );
+    }
+}

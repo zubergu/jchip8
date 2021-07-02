@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="All tests suite">
+  
+  <test name="All unit tests">
+    <packages>
+      <package name="com.zubergu.jchip8.model" />
+      <package name="com.zubergu.jchip8.model.instructions" />
+    </packages>
+  </test>
+  
+</suite>

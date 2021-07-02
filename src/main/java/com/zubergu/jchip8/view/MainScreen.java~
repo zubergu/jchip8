@@ -1,0 +1,28 @@
+package com.zubergu.jchip8.view;
+
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+
+public class MainScreen extends JFrame {
+    private JMenuBar menuBar;
+    private JMenu fileMenu;
+    private JMenuItem loadFileItem;
+    private JMenu controlMenu;
+    private JMenuItem stopStartItem;
+    
+    
+    public MainScreen() {
+        super( "JCHIP8 by zubergu" );
+    }
+    
+    
+    public JMenuItem getLoadFileItem() {
+        return loadFileItem;
+    }
+    
+    public JMenuItem getStopStartItem() {
+        return stopStartItem;
+    }
+}

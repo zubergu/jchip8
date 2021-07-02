@@ -1,0 +1,29 @@
+package com.zubergu.jchip8.model;
+
+public class Display {
+    
+    public static final int NUMBER_OF_ROWS = 32;    // y
+    public static final int NUMBER_OF_COLUMNS = 64; // x
+    
+    private boolean[][] memory;
+    
+    public Display() {
+        memory = new boolean[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS]; // memory[y][x] ( row, col )
+    }
+    
+    public void setPixel( int col, int row, boolean value ) {
+        memory[row][col] = value;
+    }
+    
+    public boolean getPixel( int col, int row ) {
+        return memory[row][col];
+    }
+    
+    public boolean xorPixel( int col, int row, boolean value ) {
+        boolean curr = getPixel( col, row );
+        setPixel( col, row, curr ^ value );
+        
+        return curr && value;  // only true ^ true == collision
+    }
+    
+}

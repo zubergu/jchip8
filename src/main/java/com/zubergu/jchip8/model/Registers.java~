@@ -1,0 +1,138 @@
+package com.zubergu.jchip8.model;
+
+public class Registers {
+    
+    public static final int NUMBER_OF_V_REGISTERS = 16;
+    public static final int STACK_SIZE = 16;
+    
+    private int[] v;
+    private int registerI;
+    private int registerDT;
+    private int registerST;
+    private int registerPC;
+    private int registerSP;
+    private int[] stack;
+    
+    public Registers() {
+        v = new int[NUMBER_OF_V_REGISTERS];
+        stack = new int[STACK_SIZE];
+    }
+    
+    
+    public int getV( int x ) {
+        return v[x];
+    }
+    
+    public void setV( int x, int value ) {
+        if( value < 0 || value > 0xFF ) {
+            throw new RuntimeException( "V"+ x + " can't hold value = 0x" + Integer.toHexString( value ) );
+        }
+        
+        v[x] = value;
+    }
+    
+    public int getI() {
+        return registerI;
+    }
+    
+    public void setI( int value ) {
+        if( value < 0 || value > 0xFFFF ) {
+            throw new RuntimeException( "I can't hold value = 0x" + Integer.toHexString( value ) );
+        }
+        
+        registerI = value;
+    }
+    
+    public int getDT() {
+        return registerDT;
+    }
+    
+    public void setDT( int value ) {
+        if( value < 0 || value > 0xFF ) {
+            throw new RuntimeException( "DT can't hold value = 0x" + Integer.toHexString( value ) );
+        }
+        
+        registerDT = value;
+    }
+    
+    public void decrementDT() {
+        if( registerDT > 0 ) {
+            registerDT--;
+        }
+    }
+    
+    public int getST() {
+        return registerST;
+    }
+    
+    public void setST( int value ) {
+        if( value < 0 || value > 0xFF ) {
+            throw new RuntimeException( "ST can't hold value = 0x" + Integer.toHexString( value ) );
+        }
+        
+        registerST = value;
+    }
+    
+    public void decrementST() {
+        if( registerST > 0 ) {
+            registerST--;
+        }
+    }
+    
+    public int getPC() {
+        return registerPC;
+    }
+    
+    public void setPC( int value ) {
+        if( value < 0 || value > 0xFFFF ) {
+            throw new RuntimeException( "PC can't hold value = 0x" + Integer.toHexString( value ) );
+        }
+        
+        registerPC = value;
+    }
+    
+    public void incrementPC() {
+        registerPC = ( registerPC + 1 ) & 0xFFFF;
+    }
+    
+    public void incrementTwicePC() {
+        incrementPC();
+        incrementPC();
+    }
+    
+    public void decrementPC() {
+        registerPC = ( registerPC - 1 ) & 0xFFFF;
+    }
+    
+    public int getSP() {
+        return registerSP;
+    }
+    
+    public void setSP( int value ) {
+        if( value < 0 || value > 0xFF ) {
+            throw new RuntimeException( "SP can't hold value = 0x" + Integer.toHexString( value ) );
+        }
+        
+        registerSP = value;
+    }
+    
+    public void incrementSP() {
+        setSP( getSP() + 1 );
+    }
+    
+    public void decrementSP() {
+        setSP( getSP() - 1 );
+    }
+    
+    public int popStack() {
+        int val = stack[getSP()];
+        decrementSP();
+        return val;
+    }
+    
+    public void pushStack( int value ) {
+        incrementSP();
+        stack[getSP()] = value;
+    }
+        
+}
